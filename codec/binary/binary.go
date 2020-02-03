@@ -1,8 +1,8 @@
 package binary
 
 import (
-	"github.com/davyxu/cellnet"
-	"github.com/davyxu/cellnet/codec"
+	"github.com/adamluo159/cellnet"
+	"github.com/adamluo159/cellnet/codec"
 	"github.com/davyxu/goobjfmt"
 )
 

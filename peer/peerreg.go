@@ -2,7 +2,7 @@ package peer
 
 import (
 	"fmt"
-	"github.com/davyxu/cellnet"
+	"github.com/adamluo159/cellnet"
 	"sort"
 )
 
@@ -38,17 +38,17 @@ func PeerCreatorList() (ret []string) {
 func getPackageByPeerName(name string) string {
 	switch name {
 	case "tcp.Connector", "tcp.Acceptor", "tcp.SyncConnector":
-		return "github.com/davyxu/cellnet/peer/tcp"
+		return "github.com/adamluo159/cellnet/peer/tcp"
 	case "udp.Connector", "udp.Acceptor":
-		return "github.com/davyxu/cellnet/peer/udp"
+		return "github.com/adamluo159/cellnet/peer/udp"
 	case "gorillaws.Acceptor", "gorillaws.Connector", "gorillaws.SyncConnector":
-		return "github.com/davyxu/cellnet/peer/gorillaws"
+		return "github.com/adamluo159/cellnet/peer/gorillaws"
 	case "http.Connector", "http.Acceptor":
-		return "github.com/davyxu/cellnet/peer/http"
+		return "github.com/adamluo159/cellnet/peer/http"
 	case "redix.Connector":
-		return "github.com/davyxu/cellnet/peer/redix"
+		return "github.com/adamluo159/cellnet/peer/redix"
 	case "mysql.Connector":
-		return "github.com/davyxu/cellnet/peer/mysql"
+		return "github.com/adamluo159/cellnet/peer/mysql"
 	default:
 		return "package/to/your/peer"
 	}

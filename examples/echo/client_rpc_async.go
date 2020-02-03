@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/davyxu/cellnet"
-	"github.com/davyxu/cellnet/peer"
-	"github.com/davyxu/cellnet/proc"
-	"github.com/davyxu/cellnet/rpc"
+	"github.com/adamluo159/cellnet"
+	"github.com/adamluo159/cellnet/peer"
+	"github.com/adamluo159/cellnet/proc"
+	"github.com/adamluo159/cellnet/rpc"
 	"time"
 )
 

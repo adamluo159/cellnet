@@ -16,7 +16,7 @@ go:
   - 1.11.x
 
 script:
-  - go test -v -test.run TestEchoTCP github.com/davyxu/cellnet/tests
+  - go test -v -test.run TestEchoTCP github.com/adamluo159/cellnet/tests
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

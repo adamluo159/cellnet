@@ -1,7 +1,7 @@
 package msglog
 
 import (
-	"github.com/davyxu/cellnet"
+	"github.com/adamluo159/cellnet"
 )
 
 // Deprecated: 当前的某个消息ID是否被屏蔽

@@ -2,12 +2,12 @@ package proto
 
 import (
 	"fmt"
-	"github.com/davyxu/cellnet"
-	"github.com/davyxu/cellnet/codec"
+	"github.com/adamluo159/cellnet"
+	"github.com/adamluo159/cellnet/codec"
 
 	// 使用binary协议，因此匿名引用这个包，底层会自动注册
-	_ "github.com/davyxu/cellnet/codec/binary"
-	"github.com/davyxu/cellnet/util"
+	_ "github.com/adamluo159/cellnet/codec/binary"
+	"github.com/adamluo159/cellnet/util"
 	"reflect"
 )
 

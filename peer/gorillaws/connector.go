@@ -2,9 +2,9 @@ package gorillaws
 
 import (
 	"fmt"
-	"github.com/davyxu/cellnet"
-	"github.com/davyxu/cellnet/peer"
-	"github.com/davyxu/cellnet/util"
+	"github.com/adamluo159/cellnet"
+	"github.com/adamluo159/cellnet/peer"
+	"github.com/adamluo159/cellnet/util"
 	"github.com/gorilla/websocket"
 	"net"
 	"net/http"

@@ -5,7 +5,7 @@
     这是由于需要的peer没有找到或者没有注册，使用cellnet内建的peer请在main入口这样导入包
 ```
     import (
-        _ "github.com/davyxu/cellnet/peer/tcp"
+        _ "github.com/adamluo159/cellnet/peer/tcp"
     )
 ```
 
@@ -14,7 +14,7 @@
     这是由于需要的processor没有找到或者没有注册，使用cellnet内建的processor请在main入口这样导入包
 ```
     import (
-        _ "github.com/davyxu/cellnet/proc/tcp"
+        _ "github.com/adamluo159/cellnet/proc/tcp"
     )
 ```
 
@@ -40,9 +40,9 @@
 
 * cellnet有网关和db支持么?
 
-   github.com/davyxu/cellnet/peer/mysql   MySQL支持
+   github.com/adamluo159/cellnet/peer/mysql   MySQL支持
    
-   github.com/davyxu/cellnet/peer/redis   Redis支持
+   github.com/adamluo159/cellnet/peer/redis   Redis支持
    
    使用方法请参考tests
 

@@ -2,8 +2,8 @@ package mysql
 
 import (
 	"database/sql"
-	"github.com/davyxu/cellnet"
-	"github.com/davyxu/cellnet/peer"
+	"github.com/adamluo159/cellnet"
+	"github.com/adamluo159/cellnet/peer"
 	"github.com/go-sql-driver/mysql"
 	"sync"
 	"time"
