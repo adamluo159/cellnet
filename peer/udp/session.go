@@ -1,11 +1,12 @@
 package udp
 
 import (
-	"github.com/adamluo159/cellnet"
-	"github.com/adamluo159/cellnet/peer"
 	"net"
 	"sync"
 	"time"
+
+	"github.com/adamluo159/cellnet"
+	"github.com/adamluo159/cellnet/peer"
 )
 
 type DataReader interface {
@@ -22,6 +23,8 @@ type udpSession struct {
 	peer.CoreContextSet
 
 	pInterface cellnet.Peer
+
+	data interface{}
 
 	pkt []byte
 
@@ -51,6 +54,16 @@ func (self *udpSession) IsAlive() bool {
 
 func (self *udpSession) ID() int64 {
 	return 0
+}
+
+//SetUserData 设置用户数据
+func (self *udpSession) SetUserData(data interface{}) {
+	self.data = data
+}
+
+//GetUserData 获取用户数据
+func (self *udpSession) GetUserData() interface{} {
+	return self.data
 }
 
 func (self *udpSession) LocalAddress() net.Addr {

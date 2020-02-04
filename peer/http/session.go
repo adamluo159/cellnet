@@ -2,10 +2,11 @@ package http
 
 import (
 	"errors"
-	"github.com/adamluo159/cellnet"
-	"github.com/adamluo159/cellnet/peer"
 	"html/template"
 	"net/http"
+
+	"github.com/adamluo159/cellnet"
+	"github.com/adamluo159/cellnet/peer"
 )
 
 type RequestMatcher interface {
@@ -58,6 +59,15 @@ func (self *httpSession) ID() int64 {
 
 // 取原始连接
 func (self *httpSession) Close() {
+}
+
+//SetUserData 设置用户数据
+func (self *httpSession) SetUserData(data interface{}) {
+}
+
+//GetUserData 获取用户数据
+func (self *httpSession) GetUserData() interface{} {
+	return nil
 }
 
 // 取会话归属的通讯端

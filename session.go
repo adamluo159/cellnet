@@ -17,6 +17,12 @@ type Session interface {
 
 	// 标示ID
 	ID() int64
+
+	// 设置用户数据
+	SetUserData(data interface{})
+
+	// 获取用户数据
+	GetUserData() interface{}
 }
 
 // 直接发送数据时，将*RawPacket作为Send参数

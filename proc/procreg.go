@@ -2,8 +2,9 @@ package proc
 
 import (
 	"fmt"
-	"github.com/adamluo159/cellnet"
 	"sort"
+
+	"github.com/adamluo159/cellnet"
 )
 
 type ProcessorBinder func(bundle ProcessorBundle, userCallback cellnet.EventCallback, args ...interface{})

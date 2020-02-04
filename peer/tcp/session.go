@@ -1,13 +1,14 @@
 package tcp
 
 import (
-	"github.com/adamluo159/cellnet"
-	"github.com/adamluo159/cellnet/peer"
-	"github.com/adamluo159/cellnet/util"
 	"net"
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"github.com/adamluo159/cellnet"
+	"github.com/adamluo159/cellnet/peer"
+	"github.com/adamluo159/cellnet/util"
 )
 
 // Socket会话
@@ -17,6 +18,8 @@ type tcpSession struct {
 	*peer.CoreProcBundle
 
 	pInterface cellnet.Peer
+
+	data interface{}
 
 	// Socket原始连接
 	conn      net.Conn
@@ -89,6 +92,16 @@ func (self *tcpSession) Send(msg interface{}) {
 	}
 
 	self.sendQueue.Add(msg)
+}
+
+//SetUserData 设置用户数据
+func (self *tcpSession) SetUserData(data interface{}) {
+	self.data = data
+}
+
+//GetUserData 获取用户数据
+func (self *tcpSession) GetUserData() interface{} {
+	return self.data
 }
 
 func (self *tcpSession) IsManualClosed() bool {

@@ -1,11 +1,12 @@
 package gorillaws
 
 import (
+	"sync"
+
 	"github.com/adamluo159/cellnet"
 	"github.com/adamluo159/cellnet/peer"
 	"github.com/adamluo159/cellnet/util"
 	"github.com/gorilla/websocket"
-	"sync"
 )
 
 // Socket会话
@@ -15,6 +16,8 @@ type wsSession struct {
 	*peer.CoreProcBundle
 
 	pInterface cellnet.Peer
+
+	data interface{}
 
 	conn *websocket.Conn
 
@@ -49,6 +52,16 @@ func (self *wsSession) Close() {
 // 发送封包
 func (self *wsSession) Send(msg interface{}) {
 	self.sendQueue.Add(msg)
+}
+
+//SetUserData 设置用户数据
+func (self *wsSession) SetUserData(data interface{}) {
+	self.data = data
+}
+
+//GetUserData 获取用户数据
+func (self *wsSession) GetUserData() interface{} {
+	return self.data
 }
 
 // 接收循环
