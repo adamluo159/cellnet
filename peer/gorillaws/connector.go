@@ -1,15 +1,14 @@
 package gorillaws
 
 import (
-	"fmt"
-	"github.com/adamluo159/cellnet"
-	"github.com/adamluo159/cellnet/peer"
-	"github.com/adamluo159/cellnet/util"
-	"github.com/gorilla/websocket"
 	"net"
 	"net/http"
 	"sync"
 	"time"
+
+	"github.com/adamluo159/cellnet"
+	"github.com/adamluo159/cellnet/peer"
+	"github.com/gorilla/websocket"
 )
 
 type wsConnector struct {
@@ -99,21 +98,22 @@ func (self *wsConnector) connect(address string) {
 		dialer.Proxy = http.ProxyFromEnvironment
 		dialer.HandshakeTimeout = 45 * time.Second
 
-		addrObj, err := util.ParseAddress(address)
-		if err != nil {
-			log.Errorf("invalid address: %s", address)
-			break
-		}
+		// addrObj, err := util.ParseAddress(address)
+		// if err != nil {
+		// 	log.Errorf("invalid address: %s", address)
+		// 	break
+		// }
 
 		// 处理非法路径问题
-		var finalAddress string
-		if addrObj.Scheme == "ws" || addrObj.Scheme == "wss" {
-			finalAddress = address
-		} else {
-			finalAddress = "ws://" + fmt.Sprintf("%s:%d%s", addrObj.Host, addrObj.MinPort, addrObj.Path)
-		}
+		// var finalAddress string
+		// if addrObj.Scheme == "ws" || addrObj.Scheme == "wss" {
+		// 	finalAddress = address
+		// } else {
+		// 	finalAddress = "ws://" + fmt.Sprintf("%s:%d%s", addrObj.Host, addrObj.MinPort, addrObj.Path)
+		// }
 
-		conn, _, err := dialer.Dial(finalAddress, nil)
+		//conn, _, err := dialer.Dial(finalAddress, nil)
+		conn, _, err := dialer.Dial(address, nil)
 		self.defaultSes.conn = conn
 
 		if err != nil {

@@ -52,6 +52,8 @@ func (bcell *BaseCell) Start(mods ...iModule) {
 	}
 	bcell.modules = mods
 
+	bcell.queue.EnableCapturePanic(true)
+
 	// 开始侦听
 	bcell.peer.Start()
 
