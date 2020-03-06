@@ -52,6 +52,8 @@ func NewWsClient(addr string, name string) *BaseCell {
 		CodecName:  "gogopb",
 	}
 
+	bcell.queue.EnableCapturePanic(true)
+
 	proc.BindProcessorHandler(p, "gorillaws.ltv", func(ev cellnet.Event) {
 		f, ok := bcell.msgHandler[reflect.TypeOf(ev.Message())]
 		if ok {
