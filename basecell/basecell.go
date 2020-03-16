@@ -2,8 +2,8 @@ package basecell
 
 import (
 	"fmt"
+	"math/rand"
 	"reflect"
-	"time"
 
 	"github.com/davyxu/golog"
 
@@ -21,21 +21,87 @@ type iModule interface {
 	OnDestory()
 }
 
+//iUserData 用户数据接口
+type iUserData interface {
+	QID() int
+}
+
 //BaseCell 基础服务
 type BaseCell struct {
-	CodecName string //编码名
+	MsgQueueLen int
 
-	bcellName    string //服务名字
-	modules      []iModule
-	msgHandler   map[reflect.Type]func(ev cellnet.Event)
-	eventHandler map[reflect.Type]func(ev interface{}) interface{}
-	queue        cellnet.EventQueue
-	peer         cellnet.GenericPeer
+	//bcellName    string //服务名字
+	modules    []iModule
+	msgHandler map[reflect.Type]func(ev cellnet.Event)
+	queue      cellnet.EventQueue
+	queues     []cellnet.EventQueue
+
+	peer cellnet.GenericPeer
 }
 
 //SetLog 设置日志
 func SetLog(l *golog.Logger) {
 	log = l
+}
+
+//New 创建新服务
+func New(msgQueLen int) *BaseCell {
+	if msgQueLen < 0 {
+		panic("msgQueLen < 0")
+	}
+
+	if msgQueLen%2 == 0 && msgQueLen > 0 {
+		panic("need msgQueLen % 2 != 0")
+	}
+
+	bcell := &BaseCell{
+		MsgQueueLen: msgQueLen,
+		queue:       cellnet.NewEventQueue(),
+		queues:      make([]cellnet.EventQueue, 0),
+		msgHandler:  make(map[reflect.Type]func(ev cellnet.Event)),
+	}
+
+	bcell.queue.EnableCapturePanic(true)
+	for i := 0; i < msgQueLen; i++ {
+		q := cellnet.NewEventQueue()
+		q.EnableCapturePanic(true)
+		bcell.queues = append(bcell.queues, q)
+	}
+
+	if DefaultCell == nil {
+		DefaultCell = bcell
+	}
+	return bcell
+}
+
+func (bcell *BaseCell) msgQueue() func(ev cellnet.Event) {
+	return func(ev cellnet.Event) {
+		if bcell.MsgQueueLen > 0 {
+			queueID := 0
+			udata := ev.Session().GetUserData()
+			if udata == nil {
+				queueID = rand.Intn(bcell.MsgQueueLen)
+			} else {
+				queueID = udata.(iUserData).QID()
+			}
+			bcell.queues[queueID].Post(func() {
+				f, ok := bcell.msgHandler[reflect.TypeOf(ev.Message())]
+				if ok {
+					f(ev)
+				} else {
+					log.Errorln("onMessage not found message handler ", ev.Message())
+				}
+			})
+			return
+		}
+
+		f, ok := bcell.msgHandler[reflect.TypeOf(ev.Message())]
+		if ok {
+			f(ev)
+		} else {
+			log.Errorln("onMessage not found message handler ", ev.Message())
+		}
+	}
 }
 
 //Start 服务开始
@@ -51,22 +117,27 @@ func (bcell *BaseCell) Start(mods ...iModule) {
 		tmpNames = append(tmpNames, m.Name())
 	}
 	bcell.modules = mods
-
-	bcell.queue.EnableCapturePanic(true)
-
 	// 开始侦听
 	bcell.peer.Start()
 
 	// 事件队列开始循环
 	bcell.queue.StartLoop()
+
+	for _, v := range bcell.queues {
+		v.StartLoop()
+	}
 }
 
 //Stop 服务停止
 func (bcell *BaseCell) Stop() {
 	bcell.peer.Stop()
 	bcell.queue.StopLoop()
-
 	bcell.queue.Wait()
+
+	for _, v := range bcell.queues {
+		v.StopLoop()
+		v.Wait()
+	}
 
 	for _, m := range bcell.modules {
 		m.OnDestory()
@@ -81,66 +152,7 @@ func RegitserMessage(msg interface{}, f func(ev cellnet.Event)) {
 	DefaultCell.RegisterMessage(msg, f)
 }
 
-//RegitserEvent 注册默认消息响应
-func RegitserEvent(msg interface{}, f func(ev interface{}) interface{}) {
-	if DefaultCell == nil {
-		panic("RegitserModuleEvt Default nil")
-	}
-	DefaultCell.RegisterEvent(msg, f)
-}
-
 //RegisterMessage 注册消息回调
 func (bcell *BaseCell) RegisterMessage(msg interface{}, f func(ev cellnet.Event)) {
 	bcell.msgHandler[reflect.TypeOf(msg)] = f
-}
-
-//RegisterEvent 注册事件消息回调
-func (bcell *BaseCell) RegisterEvent(evt interface{}, f func(ev interface{}) interface{}) {
-	bcell.eventHandler[reflect.TypeOf(evt)] = f
-}
-
-//PostEvent 事件推送
-func (bcell *BaseCell) PostEvent(evt interface{}) {
-	bcell.queue.Post(func() {
-		f, ok := bcell.eventHandler[reflect.TypeOf(evt)]
-		if ok {
-			f(evt)
-		} else {
-			log.Errorln("PostEvent not found event handler ", reflect.TypeOf(evt))
-		}
-	})
-}
-
-//PostEventSync  同步事件推送
-func (bcell *BaseCell) PostEventSync(evt interface{}) interface{} {
-	ch := make(chan interface{}, 1)
-
-	bcell.queue.Post(func() {
-		f, ok := bcell.eventHandler[reflect.TypeOf(evt)]
-		if ok {
-			ch <- f(evt)
-		} else {
-			log.Errorln("PostEventSync not found event handler ", reflect.TypeOf(evt))
-		}
-	})
-
-	// 等待RPC回复
-	select {
-	case v := <-ch:
-		return v
-	case <-time.After(time.Second * 15):
-		return nil
-	}
-}
-
-//PostEventAsync 异步调用
-func (bcell *BaseCell) PostEventAsync(evt interface{}, cb func(ret interface{})) {
-	bcell.queue.Post(func() {
-		f, ok := bcell.eventHandler[reflect.TypeOf(evt)]
-		if ok {
-			cb(f(evt))
-		} else {
-			log.Errorln("PostEventAsync not found event handler ", reflect.TypeOf(evt))
-		}
-	})
 }
