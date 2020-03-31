@@ -3,6 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
+	"os"
+	"reflect"
+	"runtime/pprof"
+	"time"
+
 	"github.com/adamluo159/cellnet"
 	"github.com/adamluo159/cellnet/codec"
 	_ "github.com/adamluo159/cellnet/codec/json"
@@ -12,11 +18,6 @@ import (
 	_ "github.com/adamluo159/cellnet/proc/tcp"
 	"github.com/adamluo159/cellnet/util"
 	"github.com/davyxu/golog"
-	"log"
-	"os"
-	"reflect"
-	"runtime/pprof"
-	"time"
 )
 
 func server() {

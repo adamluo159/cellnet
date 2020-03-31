@@ -3,7 +3,6 @@ module github.com/adamluo159/cellnet
 go 1.13
 
 require (
-	code.byted.org/gopkg/pkg v0.0.0-20200121054159-68e4480616b8
 	github.com/davyxu/golexer v0.1.0 // indirect
 	github.com/davyxu/golog v0.1.0
 	github.com/davyxu/goobjfmt v0.1.0
