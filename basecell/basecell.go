@@ -156,3 +156,36 @@ func RegitserMessage(msg interface{}, f func(ev cellnet.Event)) {
 func (bcell *BaseCell) RegisterMessage(msg interface{}, f func(ev cellnet.Event)) {
 	bcell.msgHandler[reflect.TypeOf(msg)] = f
 }
+
+//RegitserPlayerPBMessage 注册默认消息响应
+func RegitserPlayerPBMessage(player interface{}) {
+	if DefaultCell == nil {
+		panic("RegitserModuleMsg Default nil")
+	}
+	DefaultCell.RegitserPlayerPBMessage(player)
+}
+
+//RegitserPlayerPBMessage 注册玩家处理的消息
+func (bcell *BaseCell) RegitserPlayerPBMessage(player interface{}) {
+	typeInfo := reflect.TypeOf(player)
+	for i := 0; i < typeInfo.NumMethod(); i++ {
+		method := typeInfo.Method(i)
+		if method.Type.NumIn() != 2 {
+			continue
+		}
+
+		if cellnet.MessageMetaByType(method.Type.In(1)) == nil {
+			continue
+		}
+		index := i
+		bcell.msgHandler[method.Type.In(1).Elem()] = func(ev cellnet.Event) {
+			if ev.Session().GetUserData() == nil {
+				log.Warnln("OnPlayerMessage not login close session", ev.Session().ID())
+				ev.Session().Close()
+				return
+			}
+			in := []reflect.Value{reflect.ValueOf(ev.Message())}
+			reflect.ValueOf(ev.Session().GetUserData()).Method(index).Call(in)
+		}
+	}
+}

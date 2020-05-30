@@ -8,7 +8,6 @@ import (
 
 	"github.com/adamluo159/cellnet"
 	"github.com/adamluo159/cellnet/peer"
-	"github.com/adamluo159/cellnet/util"
 )
 
 // Socket会话
@@ -145,9 +144,9 @@ func (self *tcpSession) recvLoop() {
 		}
 
 		if err != nil {
-			if !util.IsEOFOrNetReadError(err) {
-				log.Errorf("session closed, sesid: %d, err: %s", self.ID(), err)
-			}
+			// if !util.IsEOFOrNetReadError(err) {
+			// 	log.Errorf("session closed, sesid: %d, err: %s", self.ID(), err)
+			// }
 
 			self.sendQueue.Add(nil)
 

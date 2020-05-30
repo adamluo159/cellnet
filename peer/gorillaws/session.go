@@ -5,7 +5,6 @@ import (
 
 	"github.com/adamluo159/cellnet"
 	"github.com/adamluo159/cellnet/peer"
-	"github.com/adamluo159/cellnet/util"
 	"github.com/gorilla/websocket"
 )
 
@@ -75,9 +74,9 @@ func (self *wsSession) recvLoop() {
 
 			log.Debugln(err)
 
-			if !util.IsEOFOrNetReadError(err) {
-				log.Errorln("session closed:", err)
-			}
+			// if !util.IsEOFOrNetReadError(err) {
+			// 	log.Errorln("session closed:", err)
+			// }
 
 			self.ProcEvent(&cellnet.RecvMsgEvent{Ses: self, Msg: &cellnet.SessionClosed{}})
 			break

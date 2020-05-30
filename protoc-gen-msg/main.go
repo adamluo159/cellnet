@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"bytes"
+
 	"github.com/davyxu/golog"
 	"github.com/davyxu/pbmeta"
 	"github.com/gogo/protobuf/proto"
